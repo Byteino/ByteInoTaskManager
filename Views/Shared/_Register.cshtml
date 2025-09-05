@@ -1,0 +1,57 @@
+﻿@{
+    @model ByteInoTaskManager.Models.DTOs.RegisterDTO
+}
+
+<form id="registerForm" asp-controller="Account" asp-action="Register" method="post" >
+    @Html.AntiForgeryToken()
+    <h2 class="h2" class="h2" class="h2">Register</h2>
+    <div class="form-g">
+        <label asp-for="UserName" class="label"></label>
+        <input asp-for="UserName" type="text"
+               class="input"
+               placeholder="Choose a username"
+               required />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+
+    </div>
+    <div class="form-g">
+        <label asp-for="Email" class="label"></label>
+        <input asp-for="Email" type="email"
+               class="input"
+               placeholder="Enter your email"
+               required />
+        <span asp-validation-for="Email" class="text-danger"></span>
+
+    </div>
+    <div class="form-g">
+        <label asp-for="Password" class="label"></label>
+        <input asp-for="Password" class="input"
+               type="password"
+               placeholder="Enter a password"
+               required />
+        <span asp-validation-for="Password" class="text-danger"></span>
+
+    </div>
+    <div class="form-g">
+        <label asp-for="ConfirmPassword" class="label"></label>
+        <input asp-for="ConfirmPassword" class="input"
+               type="password"
+               placeholder="Re-enter your password"
+               required />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+
+    </div>
+    <button type="submit" class="button">Register</button>
+
+</form>
+<button id="btnShowLogin" class="btn btn-link"> Login</button>
+
+
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

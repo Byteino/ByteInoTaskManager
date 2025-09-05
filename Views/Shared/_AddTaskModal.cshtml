@@ -1,0 +1,29 @@
+﻿@model ByteInoTaskManager.Models.DTOs.TaskItemDTO
+
+<div class="modal" id="addModal" style="display:none;">
+    <div class="modal-contents">
+        <h2>Add Task</h2>
+
+        <form id="addTaskForm" asp-action="Add" asp-controller="TaskItems" method="post">
+            @Html.AntiForgeryToken()
+
+            <label for="task">Task</label>
+            <input type="text" name="Title" id="task" required />
+
+            <label for="Description">Description</label>
+            <textarea name="Description" id="taskDesc"></textarea>
+
+            <label for="category">Category</label>
+            @Html.DropDownListFor(m => m.CategoryId, new SelectList(ViewBag.Categories, "Id", "Name"), "No Category")
+
+            <label for="status">Status</label>
+            @Html.DropDownListFor(m => m.Status, new List<SelectListItem> {
+            new SelectListItem { Text = "Pending", Value = "Pending" },
+                        new SelectListItem { Text = "Finished", Value = "Finished" }
+                        })
+
+            <button type="submit" class="btn btn-success">Save</button>
+            <button type="button" id="cancelAddBtn" class="btn btn-warning">Cancel</button>
+        </form>
+    </div>
+</div>

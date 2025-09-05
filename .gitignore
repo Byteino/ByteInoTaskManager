@@ -1,0 +1,20 @@
+# Visual Studio files
+.vs/
+*.user
+*.suo
+*.sln.docstates
+
+# Build directories
+bin/
+obj/
+
+# ASP.NET Core files
+wwwroot/uploads/
+appsettings.Development.json
+appsettings.Local.json
+
+# Rider/JetBrains IDE
+.idea/
+
+# Other
+*.log

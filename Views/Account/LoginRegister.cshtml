@@ -1,0 +1,41 @@
+﻿@{
+    @model ByteInoTaskManager.Models.ViewModel.AuthViewModel
+
+}
+<section class="lp">
+    <div class="contain">
+
+        <div id="auth-container">
+            <div id="login-panel" style="display:@(Model.ActiveForm == "login" ? "block" : "none")">
+                @await Html.PartialAsync("_Login", Model.Login)
+            </div>
+
+            <div id="register-panel" style="display:@(Model.ActiveForm == "register" ? "block" : "none")">
+                @await Html.PartialAsync("_Register", Model.Register)
+            </div>
+
+        </div>
+    </div>
+</section>
+<script>
+</script>
+
+
+
+@section Scripts {
+    <script>
+        document.getElementById("btnShowLogin").addEventListener("click", function () {
+            document.getElementById("login-panel").style.display = "block";
+            document.getElementById("register-panel").style.display = "none";
+        });
+
+        document.getElementById("btnShowRegister").addEventListener("click", function () {
+            document.getElementById("login-panel").style.display = "none";
+            document.getElementById("register-panel").style.display = "block";
+
+        });
+    </script>
+}
+
+
+

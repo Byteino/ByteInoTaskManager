@@ -1,0 +1,40 @@
+﻿@model ByteInoTaskManager.Models.DTOs.LoginDTO
+
+
+<form id="loginForm" asp-controller="Account" asp-action="Login" method="post" class="form-g">
+    @Html.AntiForgeryToken()
+    <h2 class="h2" class="h2" class="h2" class="h2">Login</h2>
+    <div class="form-g">
+        <label asp-for="Username" class="label">Email</label>
+        <input asp-for="Username" type="email"
+               class="input"
+               placeholder="Enter your email"
+               required />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+    <div class="form-g">
+        <label asp-for="Password" class="label"></label>
+        <input asp-for="Password" class="input"
+               type="password"
+               placeholder="Enter your password"
+               required />
+        <span asp-validation-for="Password" class="text-danger"></span>
+
+    </div>
+    <div class="form-g">
+        <label asp-for="RememberMe" class="label"></label>
+        <input asp-for="RememberMe">
+    </div>
+    <button type="submit" class="button">Login</button>
+
+</form>
+<button id="btnShowRegister" class="btn btn-link">New user ? Register</button>
+
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

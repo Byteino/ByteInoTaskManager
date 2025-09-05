@@ -1,0 +1,196 @@
+﻿@model IEnumerable<ByteInoTaskManager.Models.DTOs.TaskItemDTO>
+
+<div class="body">
+    <div class="containers">
+        <div class="controls">
+            <button type="button" id="addTaskButton">Add Task</button>
+
+
+            <div>
+                <input type="text" id="searchText" placeholder="Search..." />
+                <button onclick="searchTasks()">Search</button>
+            </div>
+
+            <div>
+                @if (ViewBag.Categories != null && ((List<CategoryDTO>)ViewBag.Categories).Any())
+                {
+                    @Html.DropDownList(
+                    "categoryId",
+                                new SelectList((IEnumerable<ByteInoTaskManager.Models.DTOs.CategoryDTO>)ViewBag.Categories, "Id", "Name", ViewBag.SelectedCategoryId),
+                                "All Categories",
+                                new { id = "categoryDropdown", onchange = "filterByCategory()" }
+                                )
+
+                                }
+                else
+                {
+                    <select id="categoryDropdown" disabled>
+                        <option>No Categories</option>
+                    </select>
+                }
+                <a class="btn btn-success" asp-action="Index" asp-controller="Category">Manage Categories</a>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Edit/Create Date</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var task in Model)
+                    {
+                        <tr data-id="@task.Id">
+                            <td>@task.Title</td>
+                            <td>@task.CategoryName</td>
+                            <td class="@(task.IsCompleted ? "text-success" : "text-warning")">@(task.IsCompleted ? "Finished" : "Pending")</td>
+                            <td>@task.Date.ToString("yyyy-MM-dd")</td>
+                            <td>@(task.Description.Length > 15 ? task.Description.Substring(0, 15) + "..." : task.Description)</td>
+                            <td>
+                                <button type="button" class="btn btn-info editTaskButton" data-id="@task.Id">Edit</button>
+                                <button type="button" class="btn btn-danger js-delete" data-id="@task.Id">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center bg-warning">No Task Exist</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@await Html.PartialAsync("_AddTaskModal", new TaskItemDTO() { Title = "" })
+
+<div class="modal" id="editModal" style="display:none;">
+    <div class="modal-contents">
+
+
+    </div>
+</div>
+
+@await Html.PartialAsync("_DeleteTaskModal")
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        // باز کردن مودال
+        $(document).on('click', '#addTaskButton', function () {
+            $("#addModal").show();
+        });
+
+        // بستن مودال
+        $(document).on('click', '#cancelAddBtn', function () {
+            $("#addModal").hide();
+        });
+
+        // Submit فرم با Ajax
+        $(document).on('submit', '#addTaskForm', function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: '/TaskItems/Add', // مسیر دقیق POST
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function (res) {
+                    if (res.success) {
+                        $("#addModal").hide();
+                        location.reload(); // رفرش صفحه و نمایش Task جدید
+                    } else {
+                        $("#addModal .modal-contents").html(res);
+                    }
+                },
+                error: function () {
+                    alert("خطا در اضافه کردن تسک!");
+                }
+            });
+        });
+
+    });
+
+
+
+        // باز کردن مودال Edit
+    $(document).on('click', '.editTaskButton', function () {
+        var id = $(this).data('id');
+
+        $.get('/TaskItems/Edit/' + id, function (html) {
+            $('#editModal .modal-contents').html(html); // فقط فرم جایگزین میشه
+            $('#editModal').show();
+        });
+    });
+
+    // بستن مودال Edit
+    $(document).on('click', '#cancelEditBtn', function () {
+        $('#editModal').hide();
+    });
+
+    // Submit فرم Edit با Ajax
+    $(document).on('submit', '#editTaskForm', function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: '/TaskItems/Edit',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function (res) {
+                if (res.success) {
+                    $('#editModal').hide();
+                    location.reload(); // تغییرات رو نشون بده
+                } else {
+                    $('#editModal .modal-contents').html(res); // دوباره فرم با خطاها
+                }
+            },
+            error: function () {
+                alert('خطا در ویرایش تسک!');
+            }
+        });
+    });
+
+
+    function openDeleteModal(id){
+        $("#confirmDeleteBtn").off().click(function(){
+            $.ajax({
+                url: '@Url.Action("Delete", "TaskItems")',
+                type:'POST',
+                data:{id:id, __RequestVerificationToken:$('input[name="__RequestVerificationToken"]').val()},
+                success:function(){ location.reload(); }
+            });
+        });
+        $("#deleteModal").show();
+    }
+
+    function closeDeleteModal(){
+        $("#deleteModal").hide();
+    }
+
+        function filterByCategory() {
+        var categoryId = $("#categoryDropdown").val();
+        var search = $("#searchText").val();
+
+        var url = '@Url.Action("TaskList", "TaskItems")' + '?categoryId=' + categoryId + '&search=' + search;
+        window.location.href = url;
+    }
+
+    function searchTasks() {
+        var categoryId = $("#categoryDropdown").val();
+        var search = $("#searchText").val();
+
+        var url = '@Url.Action("TaskList", "TaskItems")' + '?categoryId=' + categoryId + '&search=' + search;
+        window.location.href = url;
+    }
+
+</script>

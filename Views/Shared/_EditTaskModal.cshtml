@@ -1,0 +1,26 @@
+﻿@model ByteInoTaskManager.Models.DTOs.TaskItemDTO
+
+<form id="editTaskForm" asp-action="Edit" asp-controller="TaskItems" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="Id" value="@Model.Id" />
+
+    <label for="editTask">Task</label>
+    <input type="text" name="Title" id="editTask" value="@Model.Title" required />
+
+    <label for="editDescription">Description</label>
+    <textarea name="Description" id="editDesc">@Model.Description</textarea>
+
+    <label for="editCategory">Category</label>
+    @Html.DropDownListFor(m => m.CategoryId,
+    new SelectList(ViewBag.Categories, "Id", "Name", Model.CategoryId),
+        "No Category")
+
+    <label for="editStatus">Status</label>
+    @Html.DropDownListFor(m => m.Status, new List<SelectListItem> {
+        new SelectListItem { Text = "Pending", Value = "Pending", Selected = Model.Status == "Pending" },
+        new SelectListItem { Text = "Finished", Value = "Finished", Selected = Model.Status == "Finished" }
+        })
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <button type="button" class="btn btn-warning" id="cancelEditBtn">Cancel</button>
+</form>
