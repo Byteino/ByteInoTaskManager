@@ -58,3 +58,40 @@ This project includes both a **user panel** and an **admin panel** with role-bas
 
 5. Run the project
 	Press F5 or click Run in Visual Studio
+
+
+
+## Usage
+
+### User Panel
+1. Open the project in Visual Studio 2022 (or later).
+2. Run the project (Press F5 or click Run).
+3. Register a new user or login if you already have an account.
+4. After login, you can:
+   - Create new tasks
+   - Edit or delete tasks
+   - Mark tasks as **Pending** or **Finished**
+   - Create and manage categories
+   - Assign tasks to categories
+
+### Admin Panel
+1. Login with the default admin user:
+   - Email: `ad@gmail.com`
+   - Password: `admin@123`
+2. Admin can:
+   - View all users and their tasks/categories
+   - Activate/Deactivate users
+   - Edit or delete users
+   - Manage user-related tasks and categories
+
+
+## Screenshots / Demo
+
+### User Panel
+![User Panel](./screenshots/user_panel.png)
+![Add Task Modal](./screenshots/add_task_modal.png)
+![Edit Task Modal](./screenshots/edit_task_modal.png)
+
+### Admin Panel
+![Admin Panel Users](./screenshots/admin_users.png)
+![Admin User Tasks](./screenshots/admin_user_tasks.png)
