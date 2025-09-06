@@ -61,8 +61,7 @@ namespace ByteInoTaskManager.Areas.SecretName.Controllers
              _context.SaveChanges();
             return RedirectToAction(nameof(Edit),new { user.Id });
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+      
         public async Task<IActionResult> Delete(string userId)
         {
             var user =await _userManager.FindByIdAsync(userId);
