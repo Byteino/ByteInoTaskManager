@@ -53,10 +53,10 @@
                             <td>@task.CategoryName</td>
                             <td class="@(task.IsCompleted ? "text-success" : "text-warning")">@(task.IsCompleted ? "Finished" : "Pending")</td>
                             <td>@task.Date.ToString("yyyy-MM-dd")</td>
-                            <td>@(task.Description.Length > 15 ? task.Description.Substring(0, 15) + "..." : task.Description)</td>
+                            <td>@(task?.Description.Length > 15 ? task?.Description.Substring(0, 15) + "..." : task?.Description)</td>
                             <td>
                                 <button type="button" class="btn btn-info editTaskButton" data-id="@task.Id">Edit</button>
-                                <button type="button" class="btn btn-danger js-delete" data-id="@task.Id">Delete</button>
+                                <button type="button" class="btn btn-danger delete-task-btn" data-id="@task.Id">Delete</button>
                             </td>
                         </tr>
                     }
@@ -161,21 +161,43 @@
     });
 
 
-    function openDeleteModal(id){
-        $("#confirmDeleteBtn").off().click(function(){
-            $.ajax({
-                url: '@Url.Action("Delete", "TaskItems")',
-                type:'POST',
-                data:{id:id, __RequestVerificationToken:$('input[name="__RequestVerificationToken"]').val()},
-                success:function(){ location.reload(); }
-            });
-        });
-        $("#deleteModal").show();
-    }
 
-    function closeDeleteModal(){
-        $("#deleteModal").hide();
-    }
+
+
+    $(document).ready(function(){
+
+        // باز کردن Delete Modal
+        $(document).on('click', '.delete-task-btn', function(){
+            var taskId = $(this).data('id');
+
+            // حذف handler های قبلی
+            $("#confirmDeleteBtn").off('click').on('click', function(){
+                $.ajax({
+                    url: '@Url.Action("Delete", "TaskItems")',
+                    type: 'POST',
+                    data: {
+                        id: taskId,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function(){
+                        $("#deleteModal").hide();
+                        location.reload(); // رفرش صفحه و نمایش تغییرات
+                    },
+                    error: function(){
+                        alert('خطا در حذف تسک!');
+                    }
+                });
+            });
+
+            $("#deleteModal").show();
+        });
+
+        // بستن Delete Modal
+        window.closeDeleteModal = function() {
+            $("#deleteModal").hide();
+        };
+
+    });
 
         function filterByCategory() {
         var categoryId = $("#categoryDropdown").val();

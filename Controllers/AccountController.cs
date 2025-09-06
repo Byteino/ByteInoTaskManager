@@ -48,6 +48,7 @@ namespace ByteInoTaskManager.Controllers
             
             if (result.Succeeded && user.IsActive != false) 
             {
+                await _userManager.AddToRoleAsync(user, "User");
                 await _signinManager.SignInAsync(user,isPersistent: false);
                 return RedirectToAction("TaskList", "TaskItems");
             }

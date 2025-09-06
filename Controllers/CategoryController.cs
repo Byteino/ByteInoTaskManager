@@ -32,6 +32,7 @@ namespace ByteInoTaskManager.Controllers
 
             var categories = await _context.Categories
                 .Where(c => c.UserId == user.Id)
+                .OrderDescending()
                 .ToListAsync();
 
             var categoryDto = _mapper.Map<List<CategoryDTO>>(categories);

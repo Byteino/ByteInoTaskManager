@@ -183,26 +183,7 @@ namespace ByteInoTaskManager.Controllers
             return Json(new { success = true });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Finish(int id)
-        {
-            var userId = _userManager.GetUserId(User);
-
-            var task = await _context.TaskItems
-                .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
-
-            if (task == null)
-                return NotFound();
-
-            task.Status = Models.TaskStatus.Finished;
-            task.IsCompleted = true;
-
-            _context.TaskItems.Update(task);
-            await _context.SaveChangesAsync();
-
-            return Json(new { success = true });
-        }
+ 
     }
 
 
